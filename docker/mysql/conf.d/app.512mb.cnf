@@ -1,0 +1,41 @@
+[client]
+default-character-set = utf8
+
+[mysqld]
+#sql_mode              = "ONLY_FULL_GROUP_BY,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+sql_mode              = ""
+max_allowed_packet    = 8M
+max_connections       = 4096
+thread_stack          = 196K
+thread_cache_size     = 8
+interactive_timeout   = 300
+wait_timeout          = 900
+sort_buffer_size      = 8M
+read_rnd_buffer_size  = 1M
+read_buffer_size      = 1M
+join_buffer_size      = 512K
+key_buffer_size       = 16M
+tmp_table_size        = 8M
+max_heap_table_size   = 8M
+net_read_timeout      = 10
+
+performance_schema = off
+general_log = 0
+slow_query_log = 0
+log_output = TABLE
+expire_logs_days                = 5
+
+innodb_doublewrite              = 0 # Disabled for cloud providers and CoW filesystems
+innodb_file_per_table           = 1
+innodb_thread_concurrency       = 8
+innodb_lock_wait_timeout        = 300
+innodb_log_files_in_group       = 2
+innodb_log_file_size            = 16M
+innodb_log_buffer_size          = 16M
+innodb_flush_log_at_trx_commit  = 2
+innodb_buffer_pool_size         = 16M
+innodb_buffer_pool_instances    = 2
+innodb_flush_method             = O_DIRECT
+
+[mariadbd]
+version=8.0.2 # fake version if mariadb used

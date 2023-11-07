@@ -1,10 +1,10 @@
-version: '3.4'
+version: '3.7'
 
 services:
   database:
     image: '${MYSQL_IMAGE:-mysql:8.0-oracle}'
     container_name: ${COMPOSE_PROJECT_NAME:-unnamed}_database
-    command: '--federated --default-authentication-plugin=mysql_native_password'
+    command: '--federated --default-authentication-plugin=caching_sha2_password'
     cap_add:
       - SYS_NICE
     environment:
@@ -16,11 +16,17 @@ services:
       MYSQL_ROOT_HOST: '${DATABASE_ROOT_HOST:-%}'
     volumes:
       - '${MYSQL_CONFIG_DIR:-.}/docker/mysql/initdb.d:/docker-entrypoint-initdb.d:ro'
-      - '${MYSQL_CONFIG_DIR:-.}/docker/mysql/conf.d/app.cnf:/etc/mysql/conf.d/app.cnf:ro'
+      - '${MYSQL_CONFIG_DIR:-.}/docker/mysql/conf.d/app.512mb.cnf:/etc/mysql/conf.d/app.cnf:ro'
       - 'mysql-data:/var/lib/mysql:delegated'
     ports:
       - '${MYSQL_BIND_HOST:-0.0.0.0}:${MYSQL_BIND_PORT:-3306}:3306'
-    restart: always
+    deploy:
+      restart_policy:
+        condition: always
+        delay: 5s
+      resources:
+        limits:
+          memory: 128M
     healthcheck:
       test: "mysqladmin ping --silent -u$${MYSQL_USER} -p$${MYSQL_PASSWORD}"
       start_period: 60s
