@@ -16,7 +16,7 @@ services:
       MYSQL_ROOT_HOST: '${DATABASE_ROOT_HOST:-%}'
     volumes:
       - '${DATABASE_CONFIG_DIR:-.}/docker/mysql/initdb.d:/docker-entrypoint-initdb.d:ro'
-      - '${DATABASE_CONFIG_DIR:-.}/docker/mysql/conf.d/app.${DATABASE_MEMORY_LIMIT_MB:-512}mb.cnf:/etc/mysql/conf.d/app.cnf:ro'
+      - '${DATABASE_CONFIG_DIR:-.}/docker/mysql/conf.d/app.${DATABASE_MEMORY_LIMIT_MB:-2048}mb.cnf:/etc/mysql/conf.d/app.cnf:ro'
       - 'mysql-data:/var/lib/mysql:delegated'
     ports:
       - '${DATABASE_BIND_HOST:-0.0.0.0}:${DATABASE_BIND_PORT:-3306}:3306'
@@ -26,7 +26,7 @@ services:
         delay: 5s
       resources:
         limits:
-          memory: ${MEMORY_LIMIT_MB:-512}M
+          memory: ${DATABASE_MEMORY_LIMIT_MB:-2048}M
     healthcheck:
       test: "mysqladmin ping --silent -u$${MYSQL_USER} -p$${MYSQL_PASSWORD}"
       start_period: 60s
